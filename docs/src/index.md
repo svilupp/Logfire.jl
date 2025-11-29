@@ -119,7 +119,7 @@ end
 
 - **[Query API](@ref)** - Download telemetry data using SQL queries
 - **[Alternative Backends](@ref)** - Use Jaeger, Langfuse, or other OTEL backends
-- **[OTEL GenAI Semantic Conventions](@ref)** - Message formats and span attributes
+- **[OpenTelemetry GenAI Semantic Conventions](@ref)** - Message formats and span attributes
 
 ## API Reference
 
