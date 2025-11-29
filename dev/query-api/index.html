@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Query API · Logfire.jl</title><meta name="title" content="Query API · Logfire.jl"/><meta property="og:title" content="Query API · Logfire.jl"/><meta property="twitter:title" content="Query API · Logfire.jl"/><meta name="description" content="Documentation for Logfire.jl."/><meta property="og:description" content="Documentation for Logfire.jl."/><meta property="twitter:description" content="Documentation for Logfire.jl."/><meta property="og:url" content="https://svilupp.github.io/Logfire.jl/query-api/"/><meta property="twitter:url" content="https://svilupp.github.io/Logfire.jl/query-api/"/><link rel="canonical" href="https://svilupp.github.io/Logfire.jl/query-api/"/><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../search_index.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../">Logfire.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li class="is-active"><a class="tocitem" href>Query API</a><ul class="internal"><li><a class="tocitem" href="#Setup"><span>Setup</span></a></li><li><a class="tocitem" href="#Basic-Usage"><span>Basic Usage</span></a></li><li><a class="tocitem" href="#Response-Formats"><span>Response Formats</span></a></li><li><a class="tocitem" href="#Query-Parameters"><span>Query Parameters</span></a></li><li><a class="tocitem" href="#EU-Region"><span>EU Region</span></a></li><li><a class="tocitem" href="#Example-Queries"><span>Example Queries</span></a></li><li><a class="tocitem" href="#Full-Example"><span>Full Example</span></a></li></ul></li><li><a class="tocitem" href="../alternative-backends/">Alternative Backends</a></li><li><a class="tocitem" href="../otel-genai/">OTEL GenAI Semantic Conventions</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Query API</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Query API</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/svilupp/Logfire.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/svilupp/Logfire.jl/blob/main/docs/src/query-api.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Query-API"><a class="docs-heading-anchor" href="#Query-API">Query API</a><a id="Query-API-1"></a><a class="docs-heading-anchor-permalink" href="#Query-API" title="Permalink"></a></h1><p>Download your telemetry data from Logfire using SQL queries.</p><h2 id="Setup"><a class="docs-heading-anchor" href="#Setup">Setup</a><a id="Setup-1"></a><a class="docs-heading-anchor-permalink" href="#Setup" title="Permalink"></a></h2><h3 id="1.-Create-a-Read-Token"><a class="docs-heading-anchor" href="#1.-Create-a-Read-Token">1. Create a Read Token</a><a id="1.-Create-a-Read-Token-1"></a><a class="docs-heading-anchor-permalink" href="#1.-Create-a-Read-Token" title="Permalink"></a></h3><ol><li>Go to <a href="https://logfire.pydantic.dev">logfire.pydantic.dev</a></li><li>Select your project</li><li>Click Settings (gear icon) → Read tokens tab</li><li>Click &quot;Create read token&quot;</li><li>Copy the token immediately (it won&#39;t be shown again)</li></ol><h3 id="2.-Configure-Environment"><a class="docs-heading-anchor" href="#2.-Configure-Environment">2. Configure Environment</a><a id="2.-Configure-Environment-1"></a><a class="docs-heading-anchor-permalink" href="#2.-Configure-Environment" title="Permalink"></a></h3><p>Add to your <code>.env</code> file:</p><pre><code class="nohighlight hljs">LOGFIRE_READ_TOKEN=pylf_v1_us_...</code></pre><p>Or set in Julia:</p><pre><code class="language-julia hljs">ENV[&quot;LOGFIRE_READ_TOKEN&quot;] = &quot;pylf_v1_us_...&quot;</code></pre><h2 id="Basic-Usage"><a class="docs-heading-anchor" href="#Basic-Usage">Basic Usage</a><a id="Basic-Usage-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-Usage" title="Permalink"></a></h2><pre><code class="language-julia hljs">using DotEnv
+DotEnv.load!()  # Load .env file (must call explicitly)
+
+using Logfire
+
+# Create client (uses LOGFIRE_READ_TOKEN from environment)
+client = LogfireQueryClient()
+
+# Or provide token directly:
+# client = LogfireQueryClient(read_token=&quot;pylf_v1_us_...&quot;)
+
+# Query with row-oriented results (default)
+rows = query_json(client, &quot;SELECT span_name, duration FROM records LIMIT 10&quot;)
+
+for row in rows
+    println(&quot;$(row[&quot;span_name&quot;]): $(row[&quot;duration&quot;])s&quot;)
+end</code></pre><h2 id="Response-Formats"><a class="docs-heading-anchor" href="#Response-Formats">Response Formats</a><a id="Response-Formats-1"></a><a class="docs-heading-anchor-permalink" href="#Response-Formats" title="Permalink"></a></h2><h3 id="Row-Oriented-(Default)"><a class="docs-heading-anchor" href="#Row-Oriented-(Default)">Row-Oriented (Default)</a><a id="Row-Oriented-(Default)-1"></a><a class="docs-heading-anchor-permalink" href="#Row-Oriented-(Default)" title="Permalink"></a></h3><p>Returns a <code>Vector{Dict{String,Any}}</code> where each element is a row:</p><pre><code class="language-julia hljs">rows = query_json(client, &quot;SELECT span_name, duration FROM records LIMIT 3&quot;)
+# [
+#   Dict(&quot;span_name&quot; =&gt; &quot;api-request&quot;, &quot;duration&quot; =&gt; 0.123),
+#   Dict(&quot;span_name&quot; =&gt; &quot;db-query&quot;, &quot;duration&quot; =&gt; 0.045),
+#   Dict(&quot;span_name&quot; =&gt; &quot;cache-hit&quot;, &quot;duration&quot; =&gt; 0.002)
+# ]</code></pre><h3 id="Column-Oriented"><a class="docs-heading-anchor" href="#Column-Oriented">Column-Oriented</a><a id="Column-Oriented-1"></a><a class="docs-heading-anchor-permalink" href="#Column-Oriented" title="Permalink"></a></h3><p>Returns a <code>Dict{String,Vector}</code> with column names as keys:</p><pre><code class="language-julia hljs">cols = query_json(client, &quot;SELECT span_name, duration FROM records LIMIT 3&quot;; row_oriented=false)
+# Dict(
+#   &quot;span_name&quot; =&gt; [&quot;api-request&quot;, &quot;db-query&quot;, &quot;cache-hit&quot;],
+#   &quot;duration&quot; =&gt; [0.123, 0.045, 0.002]
+# )</code></pre><h3 id="CSV-Export"><a class="docs-heading-anchor" href="#CSV-Export">CSV Export</a><a id="CSV-Export-1"></a><a class="docs-heading-anchor-permalink" href="#CSV-Export" title="Permalink"></a></h3><p>Returns raw CSV as a string:</p><pre><code class="language-julia hljs">csv_data = query_csv(client, &quot;SELECT span_name, duration FROM records LIMIT 100&quot;)
+
+# Save to file
+open(&quot;export.csv&quot;, &quot;w&quot;) do f
+    write(f, csv_data)
+end</code></pre><h2 id="Query-Parameters"><a class="docs-heading-anchor" href="#Query-Parameters">Query Parameters</a><a id="Query-Parameters-1"></a><a class="docs-heading-anchor-permalink" href="#Query-Parameters" title="Permalink"></a></h2><pre><code class="language-julia hljs">query_json(client, sql;
+    row_oriented = true,      # true for Vector{Dict}, false for Dict{String,Vector}
+    min_timestamp = nothing,  # ISO-8601 lower bound, e.g., &quot;2024-01-01T00:00:00Z&quot;
+    max_timestamp = nothing,  # ISO-8601 upper bound
+    limit = nothing           # Max rows (default: 500, max: 10000)
+)</code></pre><h3 id="Time-Filtered-Query"><a class="docs-heading-anchor" href="#Time-Filtered-Query">Time-Filtered Query</a><a id="Time-Filtered-Query-1"></a><a class="docs-heading-anchor-permalink" href="#Time-Filtered-Query" title="Permalink"></a></h3><pre><code class="language-julia hljs">using Dates
+
+# Last 24 hours
+yesterday = now(UTC) - Hour(24)
+min_ts = Dates.format(yesterday, &quot;yyyy-mm-ddTHH:MM:SSZ&quot;)
+
+rows = query_json(client, &quot;&quot;&quot;
+    SELECT span_name, duration
+    FROM records
+    ORDER BY start_timestamp DESC
+&quot;&quot;&quot;; min_timestamp=min_ts, limit=100)</code></pre><h2 id="EU-Region"><a class="docs-heading-anchor" href="#EU-Region">EU Region</a><a id="EU-Region-1"></a><a class="docs-heading-anchor-permalink" href="#EU-Region" title="Permalink"></a></h2><p>For EU-hosted projects, use the EU endpoint:</p><pre><code class="language-julia hljs">client = LogfireQueryClient(endpoint=QUERY_ENDPOINT_EU)</code></pre><h2 id="Example-Queries"><a class="docs-heading-anchor" href="#Example-Queries">Example Queries</a><a id="Example-Queries-1"></a><a class="docs-heading-anchor-permalink" href="#Example-Queries" title="Permalink"></a></h2><h3 id="Most-Common-Operations"><a class="docs-heading-anchor" href="#Most-Common-Operations">Most Common Operations</a><a id="Most-Common-Operations-1"></a><a class="docs-heading-anchor-permalink" href="#Most-Common-Operations" title="Permalink"></a></h3><pre><code class="language-sql hljs">SELECT COUNT() AS count, span_name
+FROM records
+GROUP BY span_name
+ORDER BY count DESC
+LIMIT 10</code></pre><h3 id="Recent-Exceptions"><a class="docs-heading-anchor" href="#Recent-Exceptions">Recent Exceptions</a><a id="Recent-Exceptions-1"></a><a class="docs-heading-anchor-permalink" href="#Recent-Exceptions" title="Permalink"></a></h3><pre><code class="language-sql hljs">SELECT exception_type, exception_message, trace_id
+FROM records
+WHERE is_exception
+ORDER BY start_timestamp DESC
+LIMIT 20</code></pre><h3 id="P95-Latency-by-Operation"><a class="docs-heading-anchor" href="#P95-Latency-by-Operation">P95 Latency by Operation</a><a id="P95-Latency-by-Operation-1"></a><a class="docs-heading-anchor-permalink" href="#P95-Latency-by-Operation" title="Permalink"></a></h3><pre><code class="language-sql hljs">SELECT
+    span_name,
+    approx_percentile_cont(0.95) WITHIN GROUP (ORDER BY duration) as P95
+FROM records
+WHERE duration IS NOT NULL
+GROUP BY span_name
+ORDER BY P95 DESC</code></pre><h3 id="Total-Duration-by-Operation"><a class="docs-heading-anchor" href="#Total-Duration-by-Operation">Total Duration by Operation</a><a id="Total-Duration-by-Operation-1"></a><a class="docs-heading-anchor-permalink" href="#Total-Duration-by-Operation" title="Permalink"></a></h3><pre><code class="language-sql hljs">SELECT SUM(duration) AS total_duration, span_name
+FROM records
+WHERE duration IS NOT NULL
+GROUP BY span_name
+ORDER BY total_duration DESC</code></pre><h3 id="Slowest-Traces"><a class="docs-heading-anchor" href="#Slowest-Traces">Slowest Traces</a><a id="Slowest-Traces-1"></a><a class="docs-heading-anchor-permalink" href="#Slowest-Traces" title="Permalink"></a></h3><pre><code class="language-sql hljs">SELECT trace_id, duration, message
+FROM records
+ORDER BY duration DESC
+LIMIT 10</code></pre><h3 id="Time-Series-Requests-per-Minute"><a class="docs-heading-anchor" href="#Time-Series-Requests-per-Minute">Time Series - Requests per Minute</a><a id="Time-Series-Requests-per-Minute-1"></a><a class="docs-heading-anchor-permalink" href="#Time-Series-Requests-per-Minute" title="Permalink"></a></h3><pre><code class="language-sql hljs">SELECT
+    date_trunc(&#39;minute&#39;, start_timestamp) AS minute,
+    COUNT() as count
+FROM records
+GROUP BY minute
+ORDER BY minute DESC
+LIMIT 60</code></pre><h3 id="LLM-Token-Usage"><a class="docs-heading-anchor" href="#LLM-Token-Usage">LLM Token Usage</a><a id="LLM-Token-Usage-1"></a><a class="docs-heading-anchor-permalink" href="#LLM-Token-Usage" title="Permalink"></a></h3><pre><code class="language-sql hljs">SELECT
+    span_name,
+    SUM(CAST(attributes[&#39;gen_ai.usage.input_tokens&#39;] AS INTEGER)) as input_tokens,
+    SUM(CAST(attributes[&#39;gen_ai.usage.output_tokens&#39;] AS INTEGER)) as output_tokens
+FROM records
+WHERE span_name LIKE &#39;gen_ai%&#39;
+GROUP BY span_name</code></pre><h2 id="Full-Example"><a class="docs-heading-anchor" href="#Full-Example">Full Example</a><a id="Full-Example-1"></a><a class="docs-heading-anchor-permalink" href="#Full-Example" title="Permalink"></a></h2><p>See <a href="https://github.com/your-repo/Logfire.jl/blob/main/examples/query_api_example.jl"><code>examples/query_api_example.jl</code></a> for a complete working example.</p><pre><code class="language-julia hljs">using Logfire
+using DotEnv
+using Dates
+
+DotEnv.load!()
+
+client = LogfireQueryClient()
+
+# Get recent operations
+rows = query_json(client, &quot;&quot;&quot;
+    SELECT span_name, duration, start_timestamp
+    FROM records
+    ORDER BY start_timestamp DESC
+    LIMIT 5
+&quot;&quot;&quot;)
+
+println(&quot;Recent operations:&quot;)
+for row in rows
+    println(&quot;  $(row[&quot;span_name&quot;]): $(row[&quot;duration&quot;])s&quot;)
+end
+
+# Aggregate stats
+stats = query_json(client, &quot;&quot;&quot;
+    SELECT COUNT() AS count, span_name
+    FROM records
+    GROUP BY span_name
+    ORDER BY count DESC
+    LIMIT 5
+&quot;&quot;&quot;)
+
+println(&quot;\nTop operations:&quot;)
+for s in stats
+    println(&quot;  $(s[&quot;span_name&quot;]): $(s[&quot;count&quot;]) occurrences&quot;)
+end
+
+# Export to CSV
+csv = query_csv(client, &quot;SELECT * FROM records LIMIT 1000&quot;)
+open(&quot;telemetry_export.csv&quot;, &quot;w&quot;) do f
+    write(f, csv)
+end
+println(&quot;\nExported to telemetry_export.csv&quot;)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../alternative-backends/">Alternative Backends »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.16.1 on <span class="colophon-date" title="Saturday 29 November 2025 01:38">Saturday 29 November 2025</span>. Using Julia version 1.12.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
