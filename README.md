@@ -13,7 +13,7 @@ DotEnv.load!() # Load .env file if present
 using Logfire, PromptingTools
 
 Logfire.configure(service_name = "my-app")  # sets up OTLP exporter to Logfire cloud if env vars present
-Logfire.instrument_promptingtools!()        # opt-in: instruments all registered models (falls back to common GPT names)
+Logfire.instrument_promptingtools!()        # instruments all registered models
 
 aigenerate("hello"; model = "gpt-5-mini")       # spans with tokens, cost, messages, tool-calls, cache info
 ```
@@ -26,7 +26,22 @@ aigenerate("hello"; model = "gpt-5-mini")       # spans with tokens, cost, messa
 ```julia
 Logfire.instrument_promptingtools_model!("my-local-llm")
 ```
-This reuses the model’s registered PromptingTools schema when available, so provider-specific behavior is preserved.
+This reuses the model's registered PromptingTools schema when available, so provider-specific behavior is preserved.
+
+### Manual schema wrapping (no auto-instrumentation)
+If you prefer not to use auto-instrumentation, you can explicitly wrap any PromptingTools schema:
+```julia
+using Logfire, PromptingTools
+
+Logfire.configure(service_name = "my-app")
+
+# Wrap the schema you want to trace
+schema = PromptingTools.OpenAISchema() |> Logfire.LogfireSchema
+
+# Use it directly - no instrument_promptingtools!() needed
+aigenerate(schema, "Hello!"; model = "gpt-5-mini")
+```
+This gives you fine-grained control over which calls are traced.
 
 ## Manual spans (non-PT code)
 ```julia
@@ -167,5 +182,3 @@ Captured exceptions appear in Logfire's UI with:
 - `exception.message` - Error message
 - `exception.stacktrace` - Full formatted stacktrace
 
-## Notes
-- The PromptingTools extension is loaded automatically but does nothing until you call `instrument_promptingtools!` (opt-in).

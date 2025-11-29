@@ -34,6 +34,24 @@ Logfire.instrument_promptingtools!()
 response = aigenerate("What is 2+2?")
 ```
 
+### Manual Schema Wrapping (No Auto-Instrumentation)
+
+If you prefer not to use auto-instrumentation, you can explicitly wrap any PromptingTools schema:
+
+```julia
+using Logfire, PromptingTools
+
+Logfire.configure(service_name = "my-app")
+
+# Wrap the schema you want to trace
+schema = PromptingTools.OpenAISchema() |> Logfire.LogfireSchema
+
+# Use it directly - no instrument_promptingtools!() needed
+aigenerate(schema, "Hello!"; model = "gpt-5-mini")
+```
+
+This gives you fine-grained control over which calls are traced.
+
 ## Authentication
 
 Set your Logfire token via one of:

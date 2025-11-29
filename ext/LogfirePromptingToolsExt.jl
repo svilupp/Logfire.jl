@@ -1,3 +1,9 @@
+# NOTE: This file is structured as a package extension, but PromptingTools is currently
+# a hard dependency of Logfire.jl. The original plan was to make it a weak dependency
+# (extension only), but this proved too complicated due to the tight integration required
+# for proper tracing. We keep the extension structure for potential future refactoring
+# into a pure extension when the architecture allows.
+
 module LogfirePromptingToolsExt
 
 import PromptingTools as PT
