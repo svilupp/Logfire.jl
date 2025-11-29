@@ -1,12 +1,5 @@
 # PromptingTools tracer-based instrumentation (no method pirating)
 
-const _DEFAULT_MODELS = [
-    "gpt-4o",
-    "gpt-4o-mini",
-    "gpt-4",
-    "gpt-3.5-turbo"
-]
-
 using PromptingTools
 
 # -- shared helpers -----------------------------------------------------------
@@ -29,53 +22,27 @@ function _schema_for_model(name; base_schema = PromptingTools.OpenAISchema())
 end
 
 function _registered_model_names()
-    names = String[]
-    # Try MODEL_REGISTRY first (most reliable)
-    try
-        if hasproperty(PromptingTools, :MODEL_REGISTRY)
-            reg = getproperty(PromptingTools, :MODEL_REGISTRY)
-            if reg isa AbstractDict && !isempty(reg)
-                append!(names, string.(keys(reg)))
-            end
-        end
-    catch
-    end
-
-    # Try function-based discovery methods
-    for fname in (:registered_models, :list_registered_models, :available_models, :models)
-        try
-            if hasproperty(PromptingTools, fname)
-                f = getproperty(PromptingTools, fname)
-                if f isa Function
-                    vals = f()
-                    if vals isa AbstractDict && !isempty(vals)
-                        append!(names, string.(keys(vals)))
-                    elseif vals isa AbstractVector && !isempty(vals)
-                        append!(names, string.(vals))
-                    end
-                end
-            end
-        catch
-        end
-    end
-
-    unique!(names)
-    return names
+    # MODEL_REGISTRY is a ModelRegistry type that supports keys()
+    reg = PromptingTools.MODEL_REGISTRY
+    return collect(string.(keys(reg)))
 end
 
 """
     instrument_promptingtools!(; models=nothing, base_schema=PromptingTools.OpenAISchema())
 
 Register Logfire's `LogfireSchema` tracer for the given model names. If `models`
-is `nothing`, all models currently registered in PromptingTools are instrumented;
-if none are registered, falls back to `_DEFAULT_MODELS`. This wraps each model's
-existing schema when available.
+is `nothing`, all models currently registered in PromptingTools are instrumented.
+Throws an error if no models are provided and none can be discovered.
 """
 function instrument_promptingtools!(; models = nothing,
         base_schema = PromptingTools.OpenAISchema())
     was_auto = models === nothing
     selected_models = models === nothing ? _registered_model_names() : models
-    isempty(selected_models) && (selected_models = _DEFAULT_MODELS)
+
+    if isempty(selected_models)
+        error("No models to instrument. Either pass `models` explicitly or ensure " *
+              "PromptingTools has registered models (check PromptingTools.MODEL_REGISTRY).")
+    end
 
     for name in selected_models
         instrument_promptingtools_model!(name; base_schema)
@@ -83,9 +50,9 @@ function instrument_promptingtools!(; models = nothing,
 
     # Only print full list if explicitly provided models, otherwise just count
     if was_auto
-        @debug "PromptingTools registered with Logfire tracer schema" count=length(selected_models)
+        @info "PromptingTools auto-instrumented with Logfire tracer schema for $(length(selected_models)) models"
     else
-        @debug "PromptingTools registered with Logfire tracer schema" models=selected_models
+        @info "PromptingTools manually instrumented with Logfire tracer schema for $(length(selected_models)) models" models=selected_models
     end
     return selected_models
 end

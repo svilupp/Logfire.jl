@@ -34,7 +34,8 @@ function PT.initialize_tracer(s::Logfire.LogfireSchema;
         Logfire.set_tool_definitions!(span, tools)
     end
 
-    return (; span, time_sent = time(), model = model_id, tracer_kwargs)
+    # Store prompt for use in finalize_tracer (needed because PT may only return result message)
+    return (; span, time_sent = time(), model = model_id, prompt, tracer_kwargs)
 end
 
 function PT.finalize_tracer(s::Logfire.LogfireSchema,
@@ -50,8 +51,8 @@ function PT.finalize_tracer(s::Logfire.LogfireSchema,
     model_id = _resolve_model_id(model)
 
     try
-        conv = msg_or_conv isa AbstractVector ? msg_or_conv : [msg_or_conv]
-        ai_msg = Logfire._find_ai_message(conv)
+        response_conv = msg_or_conv isa AbstractVector ? msg_or_conv : [msg_or_conv]
+        ai_msg = Logfire._find_ai_message(response_conv)
 
         # Record token usage and response metadata
         Logfire._record_usage!(span, ai_msg)
@@ -60,9 +61,13 @@ function PT.finalize_tracer(s::Logfire.LogfireSchema,
         Logfire._record_streaming_attrs!(span, ai_msg)
         Logfire._record_tool_calls!(span, ai_msg)
 
+        # Build full conversation: prompt (input) + response (output)
+        # PT may only return the result message, so we need to prepend the original prompt
+        prompt = get(tracer_state, :prompt, nothing)
+        full_conv = _build_full_conversation(prompt, response_conv)
+
         # Record messages as span attributes for Logfire UI message previews
-        # This uses PT's render() for proper role mapping and image/tool support
-        Logfire._record_messages_as_attributes!(span, conv)
+        Logfire._record_messages_as_attributes!(span, full_conv)
 
         # Note: Events are skipped because PydanticAI doesn't use them (otel_events: [])
         # and the Julia OTel library has serialization issues with event attributes.
@@ -73,7 +78,40 @@ function PT.finalize_tracer(s::Logfire.LogfireSchema,
         OpenTelemetryAPI.end_span!(span)
     end
 
-    return msg_or_conv
+    # Always return a vector for PT's tracer infrastructure (aigenerate expects last() to work)
+    return msg_or_conv isa AbstractVector ? msg_or_conv : [msg_or_conv]
+end
+
+"""
+Build full conversation by combining prompt with response.
+Handles various prompt formats from PromptingTools.
+"""
+function _build_full_conversation(prompt, response_conv::AbstractVector)
+    # If no prompt captured, just return response
+    prompt === nothing && return response_conv
+
+    # Convert prompt to vector of messages
+    input_msgs = if prompt isa AbstractVector
+        prompt
+    elseif prompt isa AbstractString
+        # Simple string prompt - wrap as UserMessage
+        [PT.UserMessage(prompt)]
+    elseif prompt isa PT.AbstractMessage
+        [prompt]
+    else
+        # Unknown format, skip
+        return response_conv
+    end
+
+    # Check if response_conv already contains input messages
+    # (some PT functions return full conversation, others just result)
+    if length(response_conv) > 1
+        # Already has multiple messages, likely full conversation
+        return response_conv
+    end
+
+    # Combine: input messages + response message(s)
+    return vcat(input_msgs, response_conv)
 end
 
 end # module

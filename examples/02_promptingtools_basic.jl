@@ -98,8 +98,8 @@ println()
 println("Example 4: Multi-turn conversation")
 println("-"^50)
 
-# Using the OpenAI Responses Schema
-schema = PromptingTools.OpenAIResponseSchema()
+# Using the OpenAI Responses Schema with LogfireSchema wrapper
+schema = PromptingTools.OpenAIResponseSchema() |> Logfire.LogfireSchema
 # First turn
 msg = aigenerate(schema, "My name is Alice."; model = "gpt-5-mini")
 println("Turn 1: ", msg.content)
